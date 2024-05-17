@@ -1,0 +1,95 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run otel-in-action docker",
+      "type": "shell",
+      "command": "docker compose -f labs/otel-in-action/docker-compose.yaml up",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run automatic auto instrumentation initial",
+      "type": "shell",
+      "command": "python3 labs/automatic-instrumentation/auto-instrumentation/initial/src/app.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run automatic auto instrumentation solution",
+      "type": "shell",
+      "command": "python3 labs/automatic-instrumentation/auto-instrumentation/solution/src/app.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run automatic library instrumentation initial",
+      "type": "shell",
+      "command": "python3 labs/automatic-instrumentation/library-instrumentation/initial/src/app.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run automatic library instrumentation solution",
+      "type": "shell",
+      "command": "python3 labs/automatic-instrumentation/library-instrumentation/solution/src/app.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run manual-instrumentation-logs initial application",
+      "type": "shell",
+      "command": "python3 labs/manual-instrumentation-logs/initial/src/app.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run manual-instrumentation-logs solution application",
+      "type": "shell",
+      "command": "python3 labs/manual-instrumentation-logs/solution/src/app.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run manual-instrumentation-metrics initial application",
+      "type": "shell",
+      "command": "python3 labs/manual-instrumentation-metrics/initial/src/app.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run manual-instrumentation-metrics solution application",
+      "type": "shell",
+      "command": "python3 labs/manual-instrumentation-metrics/solution/src/app.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run manual-instrumentation-traces initial application",
+      "type": "shell",
+      "command": "python3 labs/manual-instrumentation-traces/initial/src/app.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run manual-instrumentation-traces solution application",
+      "type": "shell",
+      "command": "python3 labs/manual-instrumentation-traces/solution/src/app.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run collector initial application",
+      "type": "shell",
+      "command": "python3 labs/collector/initial/src/app.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run collector solution application",
+      "type": "shell",
+      "command": "python3 labs/collector/solution/src/app.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run collector initial",
+      "type": "shell",
+      "command": "docker compose -f labs/collector/initial/docker-compose.yml up",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run collector solution",
+      "type": "shell",
+      "command": "docker compose -f labs/collector/solution/docker-compose.yml up",
+      "problemMatcher": []
+    }
+  ]
+}

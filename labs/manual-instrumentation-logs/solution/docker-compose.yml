@@ -1,0 +1,5 @@
+services:
+  echo:
+    image: ealen/echo-server:0.9.2
+    ports:
+      - 6000:80

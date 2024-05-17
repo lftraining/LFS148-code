@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Most beautiful of all Java Todo Lists</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/>
+<body>
+
+<div class="w3-row-padding w3-section" style="margin: 0px auto; width: 800px;" >
+
+    <header class="w3-container w3-teal">
+        <h1>Most beautiful of all Java Todo Lists</h1>
+    </header>
+
+    <h2>Add a ToDo</h2>
+
+    <div>
+        <table class="w3-table-all w3-hoverable">
+            <tr class="w3-teal">
+                <th width="600px">Item</th>
+                <th>Action</th>
+            </tr>
+            <tr>
+                <form method="POST" th:action="@{/}">
+                    <td>
+                        <label for="description">Description:</label>
+                        <input type="text" name="toDo" size="40"/>
+                    </td>
+                    <td>
+                        <input class="w3-button w3-black" type="submit" value="Submit!"/>
+                    </td>
+                </form>
+            </tr>
+        </table>
+    </div>
+
+    <hr/>
+
+    <h2>ToDo List</h2>
+<!--
+    <div>
+        Feature Flag Cookie:
+        <a href="/createcookie">Create</a> |
+        <a href="/deletecookie">Delete</a>
+    </div>
+-->
+    <div th:unless="${#lists.isEmpty(items)}">
+        <table class="w3-table-all w3-hoverable">
+            <tr class="w3-teal">
+                <th width="600px">Item</th>
+                <th>Action</th>
+            </tr>
+<!--
+            <tr>
+                <td>You have <span th:text="${#lists.size(items)}" /> ToDo(s) :-)</td>
+                <td>None</td>
+            </tr>
+-->
+            <tr th:each="item : ${items}">
+                <td th:text="${item}"/>
+                <td>
+                    <form method="POST" th:action="@{|/${item}|}">
+                        <input class="w3-button w3-black" type="submit" value="Done!"/>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div th:if="${#lists.isEmpty(items)}">
+        <table class="w3-table-all w3-hoverable">
+            <tr class="w3-teal">
+                <th width="600px">Item</th>
+                <th>Action</th>
+            </tr>
+            <tr>
+                <td>You have no ToDos :-)</td>
+                <td>None</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
+
+

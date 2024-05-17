@@ -1,0 +1,27 @@
+
+export OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
+opentelemetry-instrument \
+    --traces_exporter otlp \
+    --metrics_exporter otlp \
+    --logs_exporter otlp \
+    --service_name flask-frontend \
+flask run -p 5000
+
+opentelemetry-instrument \
+    --traces_exporter console \
+    --metrics_exporter otlp \
+    --logs_exporter otlp \
+    --service_name flask-frontend \
+flask run -p 5000
+
+
+
+
+opentelemetry-instrument \
+    --traces_exporter otlp \
+    --metrics_exporter otlp \
+    --logs_exporter otlp \
+    --service_name python-frontend \
+python app.py
+
+    --traces_exporter console,otlp \

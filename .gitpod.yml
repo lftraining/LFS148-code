@@ -1,0 +1,12 @@
+# Image of workspace. Learn more: https://www.gitpod.io/docs/configure/workspaces/workspace-image
+image: ghcr.io/lftraining/lfs148-code-application:lf-initial
+workspaceLocation: "/workspace/opentelemetry-training/labs"
+# tasks:
+#   - name: Add Python Otel libs
+#     command: pip3 install requests flask Faker opentelemetry-api opentelemetry-sdk opentelemetry-exporter-prometheus opentelemetry-exporter-otlp
+#   - name: Start httpbin
+#     command: docker run -p 80:80 kennethreitz/httpbin
+#   - name: Enable httpbin
+#     command: echo 127.0.0.1 httpbin | sudo tee -a /etc/hosts
+#   - name: Start tutorial
+#     command: docker compose up tutorial

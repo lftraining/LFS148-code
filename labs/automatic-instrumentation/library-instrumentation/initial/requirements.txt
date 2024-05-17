@@ -1,0 +1,5 @@
+requests
+flask
+Faker
+opentelemetry-api==1.24.0
+opentelemetry-sdk==1.24.0
