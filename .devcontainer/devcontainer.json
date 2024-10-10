@@ -17,7 +17,7 @@
 	],
 	"containerEnv": {
 		"SHELL": "/bin/bash",
-		"EXERCISES": "/workspaces/opentelemetry-training/exercises"
+		"EXERCISES": "/workspaces/LFS148-code/exercises"
 	},
 	"portsAttributes": {
 		"5000": {
