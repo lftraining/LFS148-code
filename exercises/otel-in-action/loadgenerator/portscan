@@ -1,0 +1,17 @@
+docker exec -it otel-in-action-loadgenerator-1 /bin/sh
+
+nc -v -z otelcol 4317
+nc -v -z otelcol 4318
+
+nc -v -z todoui-flask 5000
+nc -v -z todoui-thymeleaf 8090
+
+nc -v -z todobackend-springboot 8080
+
+nc -v -z postgresdb  5432
+
+nc -v -z prometheus 9090
+
+nc -v -z jaeger 16686
+nc -v -z jaeger 4317
+nc -v -z jaeger 4318

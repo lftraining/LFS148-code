@@ -1,0 +1,156 @@
+pom.xml
+
+under project
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.opentelemetry</groupId>
+                <artifactId>opentelemetry-bom</artifactId>
+                <version>1.40.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+under dependencies
+
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-api</artifactId>
+        </dependency>
+
+mvn clean package - works
+
+More packages
+
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-sdk</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-exporter-logging</artifactId>
+        </dependency>
+        <dependency>
+            <!-- Not managed by opentelemetry-bom -->
+            <groupId>io.opentelemetry.semconv</groupId>
+            <artifactId>opentelemetry-semconv</artifactId>
+            <version>1.26.0-alpha</version>
+        </dependency>
+
+
+In Java app:
+
+import io.opentelemetry.api.OpenTelemetry;
+import io.opentelemetry.api.common.Attributes;
+
+import io.opentelemetry.sdk.OpenTelemetrySdk;
+import io.opentelemetry.sdk.resources.Resource;
+
+import io.opentelemetry.semconv.ResourceAttributes;
+
+	@Bean
+	public OpenTelemetry openTelemetry(){
+
+		Resource resource = Resource.getDefault().toBuilder().put(ResourceAttributes.SERVICE_NAME, "todobackend").put(ResourceAttributes.SERVICE_VERSION, "0.1.0").build();
+
+		OpenTelemetry openTelemetry = OpenTelemetrySdk.builder()
+			.buildAndRegisterGlobal();
+
+		return openTelemetry;
+	}
+
+
+For Tracing:
+
+import io.opentelemetry.sdk.trace.SdkTracerProvider;
+import io.opentelemetry.sdk.trace.export.SimpleSpanProcessor;
+
+import io.opentelemetry.exporter.logging.LoggingSpanExporter;
+
+import io.opentelemetry.api.trace.Tracer;
+
+	@Bean
+	public OpenTelemetry openTelemetry(){
+
+		Resource resource = Resource.getDefault().toBuilder().put(ResourceAttributes.SERVICE_NAME, "todobackend").put(ResourceAttributes.SERVICE_VERSION, "0.1.0").build();
+
+		SdkTracerProvider sdkTracerProvider = SdkTracerProvider.builder()
+			.addSpanProcessor(SimpleSpanProcessor.create(LoggingSpanExporter.create()))
+			.setResource(resource)
+			.build();
+
+		OpenTelemetry openTelemetry = OpenTelemetrySdk.builder()
+			.setTracerProvider(sdkTracerProvider)
+			.buildAndRegisterGlobal();
+
+		return openTelemetry;
+	}
+
+Acquiring a tracer:
+
+Creating spans:
+
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.context.Scope;
+
+
+Frontend:
+
+export BACKEND_URL=http://localhost:8080
+export BACKEND_URL=http://localhost:8080
+
+
+Put everything in own Config class:
+
+package io.novatec.todobackend;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+//Basic Otel
+import io.opentelemetry.api.OpenTelemetry;
+import io.opentelemetry.exporter.logging.LoggingSpanExporter;
+import io.opentelemetry.sdk.OpenTelemetrySdk;
+import io.opentelemetry.sdk.resources.Resource;
+//Tracing and Spans
+import io.opentelemetry.sdk.trace.SdkTracerProvider;
+import io.opentelemetry.sdk.trace.export.SimpleSpanProcessor;
+import io.opentelemetry.semconv.ResourceAttributes;
+
+
+@SuppressWarnings("deprecation")
+@Configuration
+public class OpenTelemetryConfiguration {
+
+    @Bean
+	public OpenTelemetry openTelemetry(){
+
+		Resource resource = Resource.getDefault().toBuilder().put(ResourceAttributes.SERVICE_NAME, "todobackend").put(ResourceAttributes.SERVICE_VERSION, "0.1.0").build();
+
+		SdkTracerProvider sdkTracerProvider = SdkTracerProvider.builder()
+			.addSpanProcessor(SimpleSpanProcessor.create(LoggingSpanExporter.create()))
+			.setResource(resource)
+			.build();
+
+		OpenTelemetry openTelemetry = OpenTelemetrySdk.builder()
+			.setTracerProvider(sdkTracerProvider)
+			.buildAndRegisterGlobal();
+
+		return openTelemetry;
+	}
+
+}
+
+
+Tracer:
+
+  	TodobackendApplication(OpenTelemetry openTelemetry) {
+    	tracer = openTelemetry.getTracer(TodobackendApplication.class.getName(), "0.1.0");
+  	}
+
+
+Spans:
+

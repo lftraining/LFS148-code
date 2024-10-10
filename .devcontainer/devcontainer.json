@@ -1,0 +1,91 @@
+{
+	"name": "otel-getting-started",
+	"workspaceFolder": "/workspaces/LFS148-code/exercises",
+	"image": "ghcr.io/lftraining/lfs148-code-application:latest",
+	"overrideCommand": false,
+	"runArgs": [
+		"--privileged"
+	],
+	"forwardPorts": [
+		5000,
+		5001,
+		5432,
+		8080,
+		8090,
+		9090,
+		16686
+	],
+	"containerEnv": {
+		"SHELL": "/bin/bash",
+		"EXERCISES": "/workspaces/opentelemetry-training/exercises"
+	},
+	"portsAttributes": {
+		"5000": {
+			"label": "Python Flask app"
+		},
+		"5001": {
+			"label": "Python Flask app"
+		},
+		"8080": {
+			"label": "Spring Boot Backend app"
+		},
+		"8090": {
+			"label": "Spring Boot Thymeleaf app"
+		},
+		"9090": {
+			"label": "Prometheus UI"
+		},
+		"16686": {
+			"label": "Jaeger UI"
+		},
+		"5432": {
+			"label": "Postgres DB"
+		}
+	},
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"files.autoSave": "afterDelay",
+				"[python]": {
+					"editor.formatOnSave": true
+				},
+				"[dockercompose][yaml]": {
+					"editor.defaultFormatter": "redhat.vscode-yaml",
+					"editor.formatOnPaste": true,
+					"editor.formatOnSave": true,
+					"editor.insertSpaces": true,
+					"editor.tabSize": 2
+				},
+				"[adoc][markdown]": {
+					"editor.defaultFormatter": "vscode.markdown-language-features",
+					"editor.formatOnPaste": true,
+					"editor.formatOnSave": true,
+					"editor.insertSpaces": true,
+					"editor.tabSize": 2
+				},
+				"[dockerfile]": {
+					"editor.quickSuggestions": {
+						"strings": true
+					},
+					"editor.defaultFormatter": "ms-azuretools.vscode-docker"
+				},
+				"python.analysis.typeCheckingMode": "strict",
+				"python.analysis.autoImportCompletions": true
+			},
+			"extensions": [
+				"vscjava.vscode-java-pack",
+				"vscjava.vscode-java-dependency",
+				"ms-python.vscode-pylance",
+				"charliermarsh.ruff",
+				"ms-python.isort",
+				"ms-python.python",
+				"njpwerner.autodocstring",
+				"KevinRose.vsc-python-indent",
+				"ms-python.black-formatter",
+				"usernamehw.errorlens",
+				"redhat.vscode-yaml",
+				"ms-azuretools.vscode-docker"
+			]
+		}
+	}
+}

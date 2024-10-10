@@ -1,0 +1,9 @@
+# Image of workspace. Learn more: https://www.gitpod.io/docs/configure/workspaces/workspace-image
+image: maeddes/gitpod:full
+workspaceLocation: "/workspace/opentelemetry-training/exercises"
+
+tasks:
+  - name: Set environment variable
+    command: eval $(gp env -e EXERCISES=/workspace/opentelemetry-training/exercises)
+  - name: Add Python Otel libs
+    command: pip3 install requests flask Faker opentelemetry-api opentelemetry-sdk opentelemetry-exporter-prometheus opentelemetry-exporter-otlp

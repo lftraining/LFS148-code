@@ -1,0 +1,6 @@
+**/__pycache__
+**/.DS_STORE
+
+*.jar
+
+settings.json

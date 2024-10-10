@@ -1,0 +1,162 @@
+services:
+
+### APPLICATION PART
+
+  postgresdb:
+    image: ${POSTGRES_IMAGE}
+    networks:
+      - todonet
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=matthias
+      - POSTGRES_DB=mydb
+
+  todobackend-springboot:
+    image: maeddes/todobackend-springboot:v2404
+    networks:
+      - todonet
+    build:
+      context: ./todobackend-springboot
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+#      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318 # http endpoint
+      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
+      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
+      - OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=grpc
+      - OTEL_EXPORTER_OTLP_METRICS_PROTOCOL=grpc
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=todobackend-springboot
+      - OTEL_METRICS_EXPORTER=otlp,logging-otlp
+      - OTEL_LOGS_EXPORTER=none
+    depends_on:
+      - postgresdb
+
+  todoui-thymeleaf:
+    image: maeddes/todoui-thymeleaf:v2404
+    build:
+      context: ./todoui-thymeleaf
+      dockerfile: Dockerfile #-multistage
+    networks:
+      - todonet
+    ports:
+      - "8090:8090"
+    environment:
+      - BACKEND_URL=http://todobackend-springboot:8080/
+      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
+      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
+      - OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=grpc
+      - OTEL_EXPORTER_OTLP_METRICS_PROTOCOL=grpc
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=todoui-thymeleaf
+      - OTEL_METRICS_EXPORTER=otlp,logging-otlp
+      - OTEL_LOGS_EXPORTER=none
+
+  todoui-flask:
+    image: maeddes/todoui-flask:v2404
+    build:
+      context: ./todoui-flask
+    networks:
+      - todonet
+    ports:
+      - "5001:5000"
+    environment:
+      - BACKEND_URL=http://todobackend-springboot:8080/todos/
+      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=todoui-flask
+      - OTEL_METRICS_EXPORTER=otlp
+
+  loadgenerator:
+    image: maeddes/simple-generator:v2404
+    build:
+      context: ./loadgenerator
+    networks:
+      - todonet
+
+
+### OTEL PART
+
+  # jaegercol:
+  #   image: jaegertracing/all-in-one:latest
+  #   environment:
+  #     - COLLECTOR_OTLP_ENABLED=true
+  #   ports:
+  #     - "16686:16686"
+  #     - "4317:4317"
+
+  jaeger:
+    image: ${JAEGERTRACING_IMAGE}
+    networks:
+      - todonet
+    command:
+      - "--memory.max-traces=5000"
+      - "--prometheus.server-url=http://prometheus:9090"
+      - "--prometheus.query.normalize-calls=true"
+      - "--prometheus.query.normalize-duration=true"
+ #      - "--query.base-path=/jaeger/ui"
+    ports:
+      - "16686:16686"
+    restart: unless-stopped
+    environment:
+      - METRICS_STORAGE_TYPE=prometheus
+
+  otelcol:
+    image: ${COLLECTOR_CONTRIB_IMAGE}
+    restart: unless-stopped
+    networks:
+      - todonet
+    command: ["--config=/etc/otel-collector-config.yml", ""]
+    volumes:
+      - ./collector/otel-collector-config.yml:/etc/otel-collector-config.yml
+    ports:
+      - "4317:4317"   # OTLP gRPC receiver
+      - "4318:4318"
+    depends_on:
+      - jaeger
+
+  # Prometheus
+  prometheus:
+    image: ${PROMETHEUS_IMAGE}
+    networks:
+      - todonet
+    command:
+      - --web.console.templates=/etc/prometheus/consoles
+      - --web.console.libraries=/etc/prometheus/console_libraries
+      - --storage.tsdb.retention.time=1h
+      - --config.file=/etc/prometheus/prometheus-config.yaml
+      - --storage.tsdb.path=/prometheus
+      - --web.enable-lifecycle
+      - --web.route-prefix=/
+      - --enable-feature=exemplar-storage
+      - --enable-feature=otlp-write-receiver
+    volumes:
+      - ./prometheus/prometheus-config.yaml:/etc/prometheus/prometheus-config.yaml
+    restart: unless-stopped
+    ports:
+      - "${PROMETHEUS_SERVICE_PORT}:${PROMETHEUS_SERVICE_PORT}"
+
+
+networks:
+  todonet:
+
+#   # opensearch:
+#   #   image: ${OPENSEARCH_IMAGE}
+#   #   container_name: opensearch
+#   #   deploy:
+#   #     resources:
+#   #       limits:
+#   #         memory: 1G
+#   #   restart: unless-stopped
+#   #   environment:
+#   #     - cluster.name=demo-cluster
+#   #     - node.name=demo-node
+#   #     - bootstrap.memory_lock=true
+#   #     - discovery.type=single-node
+#   #     - OPENSEARCH_JAVA_OPTS=-Xms300m -Xmx300m
+#   #     - DISABLE_INSTALL_DEMO_CONFIG=true
+#   #     - DISABLE_SECURITY_PLUGIN=true
+#   #   ports:
+#   #     - "9200:9200"
