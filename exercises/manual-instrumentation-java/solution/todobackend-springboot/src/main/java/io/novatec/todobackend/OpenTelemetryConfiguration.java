@@ -1,4 +1,4 @@
-package com.example.todobackend;
+package io.novatec.todobackend;
 
 import java.time.Duration;
 

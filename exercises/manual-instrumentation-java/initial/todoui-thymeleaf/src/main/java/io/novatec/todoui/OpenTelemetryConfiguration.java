@@ -1,4 +1,4 @@
-package com.example.todoui;
+package io.novatec.todoui;
 
 import java.util.concurrent.TimeUnit;
 

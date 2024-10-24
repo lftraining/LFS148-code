@@ -1,4 +1,4 @@
-package com.example.todobackend;
+package io.novatec.todobackend;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +13,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.web.bind.annotation.*;
 
-import io.opentelemetry.instrumentation.annotations.SpanAttribute;
-import io.opentelemetry.instrumentation.annotations.WithSpan;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -25,9 +23,6 @@ import jakarta.persistence.Id;
 public class TodobackendApplication {
 
 	private Logger logger = LoggerFactory.getLogger(TodobackendApplication.class);
-
-	@Value("${CF_INSTANCE_GUID:not_set}")
-	String cfInstance;
 
 	@Value("${HOSTNAME:not_set}")
 	String hostname;
@@ -42,8 +37,6 @@ public class TodobackendApplication {
 
 		if (!hostname.equals("not_set"))
 			return hostname;
-		if (!cfInstance.equals("not_set"))
-			return cfInstance;
 		return "probably localhost";
 
 	}
@@ -65,11 +58,8 @@ public class TodobackendApplication {
 	@GetMapping("/todos/")
 	List<String> getTodos(){
 
-		logger.info(cfInstance);
-
 		List<String> todos = new ArrayList<String>();
 
-		//for(Todo todo : todoRepository.findAll()) todos.add(todo.getTodo());
 		todoRepository.findAll().forEach(todo -> todos.add(todo.getTodo()));
 		logger.info("GET /todos/ "+todos.toString());
 
@@ -88,8 +78,7 @@ public class TodobackendApplication {
 
 	}
 
-	@WithSpan
-	String someInternalMethod(@SpanAttribute String todo){
+	String someInternalMethod(String todo){
 
 		todoRepository.save(new Todo(todo));
 		if(todo.equals("slow")){

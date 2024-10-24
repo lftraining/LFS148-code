@@ -11,7 +11,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
-	<groupId>com.example</groupId>
+	<groupId>io.novatec</groupId>
 	<artifactId>todobackend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>todobackend</name>

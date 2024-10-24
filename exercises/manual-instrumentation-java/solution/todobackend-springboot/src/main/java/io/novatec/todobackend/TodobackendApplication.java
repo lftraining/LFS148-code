@@ -1,4 +1,4 @@
-package com.example.todobackend;
+package io.novatec.todobackend;
 
 import static io.opentelemetry.api.common.AttributeKey.stringKey;
 

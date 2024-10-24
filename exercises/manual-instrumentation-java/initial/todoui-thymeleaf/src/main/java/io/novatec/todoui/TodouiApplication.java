@@ -1,7 +1,14 @@
-package com.example.todoui;
+package io.novatec.todoui;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,14 +20,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-
-import java.util.List;
-import java.util.ArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.opentelemetry.api.OpenTelemetry;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.SpanKind;
+import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.context.Context;
 
 @SpringBootApplication
 @Controller
@@ -28,9 +32,17 @@ public class TodouiApplication {
 
 	private Logger logger = LoggerFactory.getLogger(TodouiApplication.class);
 
+	private OpenTelemetry openTelemetry;
+	private Tracer tracer;
+
 	@Value("${backend.url}")
 	String endpoint;
 	RestTemplate template = new RestTemplate();
+
+	public TodouiApplication(OpenTelemetry openTelemetry) {
+		this.openTelemetry = openTelemetry;
+		tracer = this.openTelemetry.getTracer(TodouiApplication.class.getName(), "0.1.0");
+	}
 
 	@PostConstruct
 	public void postConstruct(){
@@ -100,7 +112,20 @@ public class TodouiApplication {
 	public String addItem(String toDo){
 
 		logger.info("POST "+ endpoint + "/todos/"+toDo);
+
+		Span span = tracer.spanBuilder("addItem").setSpanKind(SpanKind.CLIENT).startSpan();
+
+		Context context = Context.current();
+
+		System.out.println("Context: "+context);
+		System.out.println("### Hallo");
+
 		template.postForEntity(endpoint+"/todos/"+toDo, null, String.class);
+
+
+
+		span.end();
+
 		return "redirect:/";
 
 	}
