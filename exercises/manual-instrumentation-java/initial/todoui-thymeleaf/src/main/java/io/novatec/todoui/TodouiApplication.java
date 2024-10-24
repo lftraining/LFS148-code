@@ -1,4 +1,4 @@
-package io.novatec.todoui;
+package com.example.todoui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +122,7 @@ public class TodouiApplication {
 
 		template.postForEntity(endpoint+"/todos/"+toDo, null, String.class);
 
-		
+
 
 		span.end();
 

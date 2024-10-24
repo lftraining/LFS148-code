@@ -105,7 +105,7 @@ export BACKEND_URL=http://localhost:8080
 
 Put everything in own Config class:
 
-package io.novatec.todobackend;
+package com.example.todobackend;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

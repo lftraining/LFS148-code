@@ -21,6 +21,6 @@ COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /opt/todoui/app
 
 ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v2.8.0/opentelemetry-javaagent.jar /opt/todoui
 
-ENTRYPOINT ["java","-cp","/opt/todoui/app:/opt/todoui/app/lib/*", "-javaagent:/opt/todoui/opentelemetry-javaagent.jar", "io.novatec.todoui.TodouiApplication"]
-#ENTRYPOINT ["java", "-cp", "/opt/todobackend/app:/opt/todobackend/app/lib/*",  "-javaagent:/opt/todobackend/opentelemetry-javaagent.jar","io.novatec.todobackend.TodobackendApplication"]
+ENTRYPOINT ["java","-cp","/opt/todoui/app:/opt/todoui/app/lib/*", "-javaagent:/opt/todoui/opentelemetry-javaagent.jar", "com.example.todoui.TodouiApplication"]
+#ENTRYPOINT ["java", "-cp", "/opt/todobackend/app:/opt/todobackend/app/lib/*",  "-javaagent:/opt/todobackend/opentelemetry-javaagent.jar","com.example.todobackend.TodobackendApplication"]
 

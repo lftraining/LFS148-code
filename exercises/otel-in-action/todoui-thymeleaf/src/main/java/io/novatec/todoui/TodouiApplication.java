@@ -1,4 +1,4 @@
-package io.novatec.todoui;
+package com.example.todoui;
 
 import javax.annotation.PostConstruct;
 

@@ -1,4 +1,4 @@
-package io.novatec.todoui;
+package com.example.todoui;
 
 import java.util.concurrent.TimeUnit;
 
@@ -45,8 +45,8 @@ public class OpenTelemetryConfiguration {
 			.addSpanProcessor(SimpleSpanProcessor.create(jaegerOtlpExporter))
     //      .addSpanProcessor(BatchSpanProcessor.builder(LoggingSpanExporter.create()).build()) // same results for now
 			.setResource(resource)
-			.build();	
-	//		.buildAndRegisterGlobal();	
+			.build();
+	//		.buildAndRegisterGlobal();
 
 
 		OpenTelemetry openTelemetry = OpenTelemetrySdk.builder()

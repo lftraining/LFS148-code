@@ -1,4 +1,4 @@
-package io.novatec.todobackend;
+package com.example.todobackend;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,13 +91,13 @@ public class TodobackendApplication {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		} 		
+		}
 		if(todo.equals("fail")){
 
 			System.out.println("Failing ...");
 			throw new RuntimeException();
-			
-		} 
+
+		}
 		return todo;
 
 	}

@@ -1,4 +1,4 @@
-package io.novatec.todobackend;
+package com.example.todobackend;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,25 +82,25 @@ public class TodobackendApplication {
 
 		return todo;
 
-	} 
+	}
 
 	String someInternalMethod(String todo){
 
 		todoRepository.save(new Todo(todo));
-		
+
 		if(todo.equals("slow")){
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		} 		
+		}
 		if(todo.equals("fail")){
 
 			System.out.println("Failing ...");
 			throw new RuntimeException();
-			
-		} 
+
+		}
 
 		return todo;
 

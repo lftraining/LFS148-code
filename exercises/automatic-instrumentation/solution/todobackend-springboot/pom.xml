@@ -11,7 +11,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
-	<groupId>io.novatec</groupId>
+	<groupId>com.example</groupId>
 	<artifactId>todobackend-automatic-solution</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>todobackend-automatic-solution</name>
