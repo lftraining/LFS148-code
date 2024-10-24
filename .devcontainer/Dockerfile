@@ -1,4 +1,4 @@
-FROM maven:3-eclipse-temurin-21  AS dind
+FROM maven:3-eclipse-temurin-21 AS dind
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV PIP_ROOT_USER_ACTION=ignore
