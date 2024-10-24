@@ -14,7 +14,7 @@ services:
       - POSTGRES_DB=mydb
 
   todobackend-springboot:
-    image: maeddes/todobackend-springboot:v2404
+    image: ghcr.io/lftraining/lfs148-code-todobackend-springboot:v2404
     networks:
       - todonet
     build:
@@ -37,7 +37,7 @@ services:
       - postgresdb
 
   todoui-thymeleaf:
-    image: maeddes/todoui-thymeleaf:v2404
+    image: ghcr.io/lftraining/lfs148-code-todoui-thymeleaf:v2404
     build:
       context: ./todoui-thymeleaf
       dockerfile: Dockerfile #-multistage
@@ -56,7 +56,7 @@ services:
       - OTEL_LOGS_EXPORTER=none
 
   todoui-flask:
-    image: maeddes/todoui-flask:v2404
+    image: ghcr.io/lftraining/lfs148-code-todoui-flask:v2404
     build:
       context: ./todoui-flask
     networks:
@@ -70,7 +70,7 @@ services:
       - OTEL_METRICS_EXPORTER=otlp
 
   loadgenerator:
-    image: maeddes/simple-generator:v2404
+    image: ghcr.io/lftraining/lfs148-code-simple-generator:v2404
     build:
       context: ./loadgenerator
     networks:
