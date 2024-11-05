@@ -42,6 +42,20 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+			<exclusions>
+                <exclusion>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.bytebuddy</groupId>
+                    <artifactId>byte-buddy</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.bytebuddy</groupId>
+                    <artifactId>byte-buddy-agent</artifactId>
+                </exclusion>
+            </exclusions>
 		</dependency>
 
 <!--
@@ -50,8 +64,8 @@
 			<artifactId>opentelemetry-instrumentation-annotations</artifactId>
 			<version>1.29.0</version>
 		</dependency>
--->		
-		
+-->
+
 		<!--<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-sleuth</artifactId>
@@ -71,7 +85,7 @@
 			<artifactId>opentelemetry-exporter-otlp</artifactId>
 			<version>1.23.1</version>
 		</dependency>		-->
-	    
+
 
 	</dependencies>
 

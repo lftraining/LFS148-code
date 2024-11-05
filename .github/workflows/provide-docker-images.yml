@@ -1,0 +1,50 @@
+name: Provide needed docker images in ghcr.io
+
+on:
+  workflow_dispatch:
+  push:
+
+env:
+  REGISTRY_IMAGE: ghcr.io/lftraining/lfs148-code
+
+jobs:
+  retag_and_push:
+    name: Provide docker image ${{ matrix.image.namespace }}/${{ matrix.image.name }}:${{ matrix.image.tag }} on ghcr.io
+    runs-on: [ubuntu-latest]
+    strategy:
+      matrix:
+        image:
+          - name: todobackend-springboot
+            tag: v2404
+            namespace: maeddes
+          - name: todoui-thymeleaf
+            tag: v2404
+            namespace: maeddes
+          - name: todoui-flask
+            tag: v2404
+            namespace: maeddes
+          - name: simple-generator
+            tag: v2404
+            namespace: maeddes
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull image from Docker Hub
+        run: |
+            docker pull docker.io/${{ matrix.image.namespace }}/${{ matrix.image.name }}:${{ matrix.image.tag }}
+
+      - name: Retag the image for GitHub Container Registry
+        run: |
+          docker tag ${{ matrix.image.namespace }}/${{ matrix.image.name }}:${{ matrix.image.tag }} ${{ env.REGISTRY_IMAGE }}-${{ matrix.image.name }}:${{ matrix.image.tag }}
+
+      - name: Push image to GitHub Container Registry
+        run: |
+          docker push ${{ env.REGISTRY_IMAGE }}-${{ matrix.image.name }}:${{ matrix.image.tag }}

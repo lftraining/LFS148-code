@@ -98,13 +98,13 @@ public class TodobackendApplication {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		} 		
+		}
 		if(todo.equals("fail")){
 
 			System.out.println("Failing ...");
 			throw new RuntimeException();
-			
-		} 
+
+		}
 		return todo;
 
 	}
