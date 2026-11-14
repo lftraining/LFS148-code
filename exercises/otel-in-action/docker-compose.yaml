@@ -12,6 +12,11 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=matthias
       - POSTGRES_DB=mydb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U matthias -d mydb"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
 
   todobackend-springboot:
     image: ghcr.io/lftraining/lfs148-code-todobackend-springboot:v2404
@@ -34,7 +39,14 @@ services:
       - OTEL_METRICS_EXPORTER=otlp,logging-otlp
       - OTEL_LOGS_EXPORTER=none
     depends_on:
-      - postgresdb
+      postgresdb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
 
   todoui-thymeleaf:
     image: ghcr.io/lftraining/lfs148-code-todoui-thymeleaf:v2404
@@ -54,6 +66,15 @@ services:
       - OTEL_RESOURCE_ATTRIBUTES=service.name=todoui-thymeleaf
       - OTEL_METRICS_EXPORTER=otlp,logging-otlp
       - OTEL_LOGS_EXPORTER=none
+    depends_on:
+      todobackend-springboot:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8090/actuator/health || exit 1"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
 
   todoui-flask:
     image: ghcr.io/lftraining/lfs148-code-todoui-flask:v2404
@@ -68,6 +89,14 @@ services:
       - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
       - OTEL_RESOURCE_ATTRIBUTES=service.name=todoui-flask
       - OTEL_METRICS_EXPORTER=otlp
+    depends_on:
+      todobackend-springboot:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; urlopen('http://localhost:5000/', timeout=2)"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
 
   loadgenerator:
     image: ghcr.io/lftraining/lfs148-code-simple-generator:v2404
@@ -75,6 +104,11 @@ services:
       context: ./loadgenerator
     networks:
       - todonet
+    depends_on:
+      todoui-flask:
+        condition: service_healthy
+      todoui-thymeleaf:
+        condition: service_healthy
 
 
 ### OTEL PART
